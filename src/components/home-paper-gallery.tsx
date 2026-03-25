@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { paperExplainers } from "@/data/paper-explainers";
+import { withBasePath } from "@/lib/with-base-path";
 
 export function HomePaperGallery() {
   return (
@@ -16,7 +17,7 @@ export function HomePaperGallery() {
           <article key={paper.pageId} className="paper-preview-card">
             <div className="paper-preview-image-wrap">
               <Image
-                src={paper.visuals[1]?.src ?? paper.visuals[0].src}
+                src={withBasePath(paper.visuals[1]?.src ?? paper.visuals[0].src)}
                 alt={paper.visuals[1]?.alt ?? paper.visuals[0].alt}
                 width={1200}
                 height={800}

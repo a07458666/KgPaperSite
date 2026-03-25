@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { paperExplainers } from "@/data/paper-explainers";
+import { withBasePath } from "@/lib/with-base-path";
 
 export function ComparisonVisuals() {
   return (
@@ -15,7 +16,7 @@ export function ComparisonVisuals() {
           return (
             <figure key={paper.pageId} className="paper-visual-card">
               <Image
-                src={visual.src}
+                src={withBasePath(visual.src)}
                 alt={visual.alt}
                 width={1200}
                 height={900}

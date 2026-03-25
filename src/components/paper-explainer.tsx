@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { PaperExplainer } from "@/data/paper-explainers";
+import { withBasePath } from "@/lib/with-base-path";
 
 const sectionIcons = {
   goal: "01",
@@ -125,7 +126,7 @@ export function PaperExplainerView({ explainer }: { explainer: PaperExplainer })
           {explainer.visuals.map((visual) => (
             <figure key={visual.src} className="paper-visual-card">
               <Image
-                src={visual.src}
+                src={withBasePath(visual.src)}
                 alt={visual.alt}
                 width={1400}
                 height={1000}
