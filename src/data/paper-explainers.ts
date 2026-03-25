@@ -31,80 +31,80 @@ export const paperExplainers: PaperExplainer[] = [
     shortTitle: "EgoGraph",
     fullTitle: "EgoGraph: Temporal Knowledge Graph for Egocentric Video Understanding",
     researchGoal:
-      "這篇 paper 要解決的是超長 egocentric video 很難被理解的問題。當影片跨越多天、內容又很分散時，傳統方法通常只能處理局部片段，難以回答需要跨時間整合的問題。",
+      "這篇 paper 想解的是超長時序 egocentric video 理解。當影片跨好幾天、事件彼此相隔很遠時，系統如何仍然能追蹤人物、物件、地點與事件之間的時間關係，並回答長時間依賴的問題。",
     problemGap:
-      "既有方法多半把長影片切成很多短片段，再各自產生 caption 或 summary。問題是，這樣會把跨片段、跨天的事件關係切碎，讓模型知道發生了什麼，卻不知道這些事情之間如何在時間上互相連結。",
+      "傳統做法常把長影片壓成 caption、summary 或 hierarchical memory。這類方法雖然能保留一些重點，但遇到跨天、跨事件的 temporal reasoning 時，容易失去精確的時間順序與事件關聯。",
     whyGraph:
-      "EgoGraph 的核心想法是，不要只把長影片壓成一堆文字摘要，而是把人物、物件、地點、事件與它們的時間關係整理成一張會隨時間演化的 knowledge graph。",
+      "EgoGraph 把長時序經驗轉成 temporal knowledge graph，不再只依靠一段很長的 plain-text memory。graph 的價值在於它能把事件、實體與時間關係顯性化，讓系統沿著時間與關聯路徑做推理。",
     contribution:
-      "它把長期記憶從『很多獨立 caption』轉成『有結構、有時間軸的 event graph』，因此更適合回答跨天、跨事件的 temporal reasoning 問題。",
+      "這篇 paper 的核心貢獻，是把 egocentric video 從靜態文字摘要改成 temporal graph memory，並且在檢索與問答時加入時間過濾與 temporal reasoning。",
     method: [
-      "先把超長影片切成帶有時間資訊的 chunks，並抽取 people、objects、locations、events 等核心實體。",
-      "用 event-centric schema 建立 temporal knowledge graph，讓每個事件與其參與實體、屬性、時間位置被保留下來。",
-      "透過 temporal relational modeling，把不同時間點發生但互相關聯的事件串成可追蹤的長期記憶。",
+      "先把長影片切成事件片段，抽出人物、物件、地點與事件等節點。",
+      "再建立帶時間資訊的 temporal knowledge graph，讓事件之間有 before / after / co-occurrence 等關係。",
+      "最後在回答問題時用時間過濾與 graph reasoning，只取和目標時間相關的子圖。",
     ],
     whyWorks: [
-      "它保留了跨片段的結構關係，而不是只保留局部文字摘要，所以更能表達長距離依賴。",
-      "時間不只是附屬資訊，而是 graph 中的核心關係，因此特別適合 temporal reasoning。",
-      "當問題需要跨多天追蹤人物、行為或事件關聯時，graph 比階層式摘要更容易維持一致性。",
+      "graph 讓長時間記憶不再只是越來越長的文字，而是可檢索、可約束的結構化記憶。",
+      "時間過濾能避免 temporal leakage，確保系統不會用未來資訊回答過去問題。",
+      "temporal reasoning 讓模型能處理跨天事件、事件順序與長距離依賴，而不是只靠局部相似度。",
     ],
     results: [
-      "在 EgoLifeQA 與 EgoR1-bench 上達到 state-of-the-art。",
-      "論文特別強調在 temporal reasoning 任務上的提升，平均比 EgoGPT 高約 29.3%。",
-      "質化案例顯示 EgoGraph 能找回帶有時間限制的關聯，而不是只回傳語意相近但時間錯位的內容。",
+      "在 EgoLifeQA 與 EgoR1-Bench 上，EgoGraph 都優於現有 baseline。",
+      "在 temporal reasoning 任務上，EgoGraph 對 EgoGPT 有明顯優勢。",
+      "在 temporal robustness 測試中，EgoGraph 比 EgoGPT 與 plain-text 更穩定，時間跨度拉長時衰退最小。",
     ],
     visuals: [
       {
         src: "/paper-assets/egograph_temporal_knowledge_graph_overview.png",
         alt: "EgoGraph overview comparison figure",
         caption:
-          "這張圖在比較兩種表示方式。左邊是 hierarchical summarization，右邊是 graph-based memory。重點是：graph 可以保留跨時間的事件關聯，而不只是把每段影片各自摘要。",
+          "這張圖在對比 hierarchical memory 與 graph memory 的差異。EgoGraph 的核心想法是把長時間經驗整理成可追蹤的 temporal knowledge graph，而不是只做文字摘要。",
       },
       {
         src: "/paper-assets/egograph_temporal_knowledge_graph_pipeline.png",
         alt: "EgoGraph method pipeline figure",
         caption:
-          "這張圖是 EgoGraph 的方法流程。可以把它理解成：先抽取影片中的事件與實體，再把它們整理成一張帶時間關係的 graph，最後再用這張 graph 回答問題。",
+          "這張圖是 EgoGraph 的方法流程：先抽事件與實體，再建立 temporal graph，最後用時間感知的檢索與推理來回答問題。",
       },
       {
         src: "/paper-assets/egograph_temporal_knowledge_graph_results.png",
-        alt: "EgoGraph benchmark results table",
+        alt: "EgoGraph benchmark results figure",
         caption:
-          "這張表是主要結果。重點不是只看單一數字，而是看 EgoGraph 在多個 long-term video QA 指標上都比 baseline 更穩定，尤其在需要時間推理的題目上更有優勢。",
+          "這張結果圖最重要的訊息是：EgoGraph、EgoGPT 與 Plain-text 在長時間上下文中的穩定性差很多，graph memory 的優勢會隨時間跨度增加而變得更明顯。",
       },
     ],
     steps: [
       {
-        id: "observe",
-        title: "把長影片切成可處理的時間片段",
-        summary: "先把超長影片切成帶時間資訊的 chunks。",
+        id: "event-split",
+        title: "Step 1. 事件切分與實體抽取",
+        summary: "先把長影片切成事件片段，抽出人物、物件、地點與事件。",
         detail:
-          "因為原始影片太長，系統不可能一次理解整段內容，所以第一步要先把它分成具有時間錨點的片段，讓後續抽取事件與實體時仍能保留『什麼時候發生』這件事。",
-        takeaway: "第一步不是為了壓縮影片，而是為了保留後續能追蹤時間關係的最小單位。",
+          "EgoGraph 不把整段影片直接當成一大段文字，而是先切出可描述的事件單位，再抽出每個事件中的關鍵實體。這讓後面的記憶單位更細，也更能被追蹤。",
+        takeaway: "如果沒有先把長時間內容拆成事件與實體，後面就很難建立真正可推理的 temporal graph。",
       },
       {
-        id: "build-events",
-        title: "把事件與實體整理成 graph",
-        summary: "將 people、objects、locations、events 與其關係轉成節點和邊。",
+        id: "graph-build",
+        title: "Step 2. 建立 Temporal Knowledge Graph",
+        summary: "把事件和實體接成帶時間資訊的圖。",
         detail:
-          "這一步把原本零散的影片內容整理成結構化表示。重要的不只是事件本身，還包括事件涉及哪些人物、物件、地點，以及它們之間如何互動。",
-        takeaway: "影片理解從這一步開始，不再只是 caption，而是變成可關聯的知識結構。",
+          "在這一步，系統會把不同時間點的事件、人物、物件與地點連成圖，保留 before / after / related 等關係。這讓跨天事件不會只留在零散 caption 裡，而是成為可追蹤的圖結構。",
+        takeaway: "graph 的重點不是畫圖，而是讓時間關係與事件依賴被顯性表示出來。",
       },
       {
-        id: "add-time",
-        title: "加入跨時間的關聯",
-        summary: "把不同時間點但互相關聯的事件串起來。",
+        id: "time-filter",
+        title: "Step 3. 時間過濾與子圖檢索",
+        summary: "根據問題時間點，只取因果上合理的子圖。",
         detail:
-          "真正讓 EgoGraph 與一般 graph 差異化的地方，在於它不是靜態圖，而是強調 temporal relation。這使模型可以回答『某件事發生之前做了什麼』或『隔天同一個人又做了什麼』這類問題。",
-        takeaway: "時間關係是 EgoGraph 真正提供價值的核心，不只是附加欄位。",
+          "回答問題時，EgoGraph 不會把所有記憶都拿來用，而是先做 temporal filtering，保留和目標時間有關的節點與邊。這能避免未來資訊干擾，也減少長時序內容中的噪音。",
+        takeaway: "時間過濾是這篇 paper 很關鍵的一步，它讓 graph retrieval 真正具備 temporal awareness。",
       },
       {
-        id: "reason",
-        title: "用 temporal graph 做 QA",
-        summary: "查詢時不只搜尋內容，而是沿著時間關係做推理。",
+        id: "temporal-reasoning",
+        title: "Step 4. 沿圖做 Temporal Reasoning",
+        summary: "利用事件順序與關聯路徑回答長時間依賴問題。",
         detail:
-          "最後回答問題時，模型不是從一堆 caption 中找相似句，而是從 graph 中找到與問題相關的事件與實體，再依時間關係組出答案。",
-        takeaway: "這篇 paper 的關鍵不是建圖本身，而是 graph 讓 QA 真正具備 long-term temporal reasoning 能力。",
+          "最後模型不是直接讀文字摘要，而是沿著 temporal graph 中的事件與實體關係做推理。這使它更擅長回答跨天、跨事件、需要記住先後順序的問題。",
+        takeaway: "EgoGraph 的優勢在於它把 long-term memory 變成了可推理的結構，而不是單純更長的文字上下文。",
       },
     ],
   },
@@ -113,80 +113,80 @@ export const paperExplainers: PaperExplainer[] = [
     shortTitle: "H-EPM",
     fullTitle: "Experience-Evolving Multi-Turn Tool-Use Agent with Hybrid Episodic-Procedural Memory",
     researchGoal:
-      "這篇 paper 要解決的是 multi-turn agent 在多輪互動中很難穩定做決策的問題。使用者的意圖會逐步展開，環境也會因為工具呼叫而改變，所以 agent 不能只靠當前 prompt，而必須根據不斷更新的狀態決定下一步。",
+      "這篇 paper 要解的是多輪 tool-use agent。當 agent 必須根據前幾輪互動的結果持續修正下一步行動時，系統如何把過往經驗整理成真正可用的 memory，而不只是把對話歷史越堆越長。",
     problemGap:
-      "現有方法如果直接重用完整 trajectory，往往太依賴舊情境；如果只看工具與工具之間的關係，又會失去上下文。換句話說，它們不是太僵硬，就是太缺乏狀態感。",
+      "如果只存完整 trajectory，經驗很難在新情境中重用；如果只記工具之間的固定關係，又會忽略當前 state 對決策的影響。這會讓 agent 在多輪任務中容易走錯方向。",
     whyGraph:
-      "H-EPM 把過去成功經驗整理成 hybrid memory graph。graph 裡不只有 tool-to-tool 的 procedural dependency，也有當時狀態的 episodic summary，因此 agent 可以同時記住『以前怎麼做』和『以前在什麼情況下這樣做』。",
+      "H-EPM 用 hybrid memory graph 同時存 procedural dependency 與 episodic state summary。graph 的作用是把『過去在哪個 state 做了什麼 action』整理成可檢索、可重組的經驗結構。",
     contribution:
-      "這篇 paper 最重要的貢獻，是把多輪決策從單純重播歷史經驗，變成根據當前 state 動態重用部分經驗。",
+      "這篇 paper 的核心貢獻，是把 episodic memory 與 procedural memory 合在同一張 graph 裡，讓多輪 agent 不只會記住過去，還能根據目前 state 選對下一步。",
     method: [
-      "從歷史成功軌跡建立 tool graph，把工具視為節點，工具間常見的轉移視為 procedural routines。",
-      "在每條邊上加入 compact episodic summaries，保存當時狀態與上下文。",
-      "推論時動態結合 episodic recall 與 procedural execution；訓練時則用記憶引導 RL exploration。",
+      "把歷史互動中的狀態、動作與結果整理成 hybrid memory graph。",
+      "在新任務中先生成 compact state summary，再去 memory graph 中找相似經驗。",
+      "根據找到的經驗路徑，排序候選 action，並在新 evidence 進來後持續更新 state。",
     ],
     whyWorks: [
-      "它不必整段複製舊經驗，而是可以重用部分相似的路徑，因此更適合 multi-turn 場景。",
-      "它保留了『當時為什麼要這樣做』，而不是只知道『以前做過這個工具』。",
-      "這讓 agent 能在新情境中更快縮小候選行動，而不是盲目探索。",
+      "graph 讓經驗不是整包回放，而是能按 state 與 action 局部重用。",
+      "episodic summary 讓 agent 能把當前情境和歷史經驗對齊，而不是只靠表面相似。",
+      "procedural relation 讓系統知道在某種 state 下，哪些 action 更可能是合理的下一步。",
     ],
     results: [
-      "論文指出 H-EPM 在多個 multi-turn tool-use benchmarks 上，相對強基線可達到 50%+ 的 inference-time 提升。",
-      "在 RL policy performance 上，out-of-distribution tasks 可達到 40%+ 的提升。",
-      "相較 episodic-only 或 tool-graph-only 方法，H-EPM 在多輪情境下更穩定。",
+      "在多個多輪 tool-use benchmark 上，H-EPM 都提升 end-to-end 準確率。",
+      "在較困難的 tau²-Bench 上，提升尤其明顯，表示它特別能幫助 state-dependent decision making。",
+      "這些結果支持論文主張：experience graph 對多輪 agent 的幫助，不只是記憶，而是決策。",
     ],
     visuals: [
       {
         src: "/paper-assets/experience-evolving_multi-turn_tool-use_agent_memory_graph.png",
         alt: "H-EPM memory graph figure",
         caption:
-          "這張圖是在說 H-EPM 的記憶不是一條條完整軌跡，而是被整理成 graph。節點是工具，邊表示常見轉移，而邊上還保留當時狀態的摘要。",
+          "這張圖在說明 hybrid memory graph 的概念：把狀態、動作與經驗路徑整理成可檢索的圖，而不是只存完整對話軌跡。",
       },
       {
         src: "/paper-assets/experience-evolving_multi-turn_tool-use_agent_adaptive_retrieval.png",
         alt: "H-EPM adaptive retrieval figure",
         caption:
-          "這張圖展示推論時怎麼用 memory graph。agent 會根據目前狀態找到相鄰的候選步驟，再決定該直接執行 routine，還是先做狀態摘要與調整。",
+          "這張圖強調的是 state-aware retrieval。當前 state 改變時，agent 應該檢索到的經驗路徑也會跟著改變。",
       },
       {
         src: "/paper-assets/experience-evolving_multi-turn_tool-use_agent_benchmark_results.png",
         alt: "H-EPM benchmark results table",
         caption:
-          "這張表是 benchmark 結果。重點是 H-EPM 同時比 episodic memory 類方法和 tool graph 類方法更好，說明兩種記憶結合起來比單獨使用更有效。",
+          "這張結果圖的重點是：H-EPM 在不同 benchmark 上都能提升多輪 agent 的 end-to-end 表現，表示 hybrid memory graph 對 decision quality 有穩定幫助。",
       },
     ],
     steps: [
       {
-        id: "build-memory",
-        title: "從成功經驗建立 memory graph",
-        summary: "先把歷史成功軌跡整理成 graph。",
+        id: "memory-graph",
+        title: "Step 1. 把經驗整理成 Memory Graph",
+        summary: "先把歷史任務中的 state、action、outcome 接成圖。",
         detail:
-          "系統不直接存整段 history，而是把每次工具使用的轉移關係抽象成 graph，這樣之後才有機會在新任務裡重用其中一部分，而不是整段照搬。",
-        takeaway: "第一步的核心是把經驗變成可重組的結構，而不是把經驗原封不動存起來。",
+          "H-EPM 先把過往多輪任務拆成狀態、工具使用與結果，然後接成 hybrid memory graph。這讓經驗不再只能整包回放，而能被局部取用。",
+        takeaway: "多輪 agent 的關鍵不是記住整段歷史，而是把可重用的決策片段結構化。",
       },
       {
-        id: "attach-state",
-        title: "在邊上保留狀態摘要",
-        summary: "記住當時在什麼情況下選擇這個工具轉移。",
+        id: "state-summary",
+        title: "Step 2. 產生 Compact State Summary",
+        summary: "把當前對話狀態整理成可比對的摘要。",
         detail:
-          "如果 graph 只記『A 工具後面常接 B 工具』，那它只是一個 routine graph。H-EPM 額外在邊上存 episodic summary，讓 agent 知道這個轉移在什麼上下文下比較合理。",
-        takeaway: "真正有用的經驗不是只有步驟順序，而是步驟順序背後的狀態條件。",
+          "當 agent 接到新任務時，它會先把目前狀態壓成 compact summary，再拿這個 summary 去 memory graph 中找相似經驗。這一步把當前情境和歷史經驗接起來。",
+        takeaway: "如果沒有 state summary，系統就只能比表面文字，很難做真正 state-aware retrieval。",
       },
       {
-        id: "retrieve",
-        title: "根據當前狀態檢索可用經驗",
-        summary: "從 memory graph 找到與現在最相近的局部路徑。",
+        id: "retrieve-experience",
+        title: "Step 3. 檢索相似經驗路徑",
+        summary: "從 memory graph 中找出和目前 state 最接近的 action path。",
         detail:
-          "到了推論階段，agent 會先看目前的對話與工具狀態，再到 graph 裡找有哪些候選下一步與之相容，而不是盲目從頭規劃。",
-        takeaway: "這一步把多輪決策從『即興猜下一步』變成『有根據地縮小候選行動』。",
+          "H-EPM 不只找相似文字，而是找相似的 state-to-action 經驗路徑。這使 agent 能參考過去在哪種狀態下應該做哪些工具操作。",
+        takeaway: "這一步的目的，是把『以前怎麼做成功的』轉成現在可用的 decision hint。",
       },
       {
-        id: "act-update",
-        title: "執行後再更新狀態與下一步",
-        summary: "每輪新 evidence 進來後都重新判斷。",
+        id: "update-action",
+        title: "Step 4. 根據新 Evidence 更新下一步",
+        summary: "新 evidence 進來後，重新排序候選 action。",
         detail:
-          "多輪 agent 最難的是狀態會變。H-EPM 的價值在於它不是只做一次檢索，而是每輪都根據新 evidence 更新目前合理的路徑。",
-        takeaway: "這篇 paper 真正想解的是：agent 如何在動態狀態下持續做對下一步。",
+          "每一輪互動後，state 都會改變。H-EPM 會用新的 evidence 更新目前判斷，重新排序候選 action，而不是沿著一開始的假設硬走到底。",
+        takeaway: "這篇 paper 的真正價值，在於讓 agent 的下一步決策持續受 state 影響，而不是一次規劃完就不再修正。",
       },
     ],
   },
@@ -195,80 +195,80 @@ export const paperExplainers: PaperExplainer[] = [
     shortTitle: "KG2RAG",
     fullTitle: "KG2RAG: Knowledge Graph-Guided Retrieval Augmented Generation",
     researchGoal:
-      "這篇 paper 要解決的是 RAG 在多跳問題上容易拿到零碎資訊的問題。很多時候系統找得到一些相關 chunk，但這些 chunk 彼此沒有被組織起來，因此答案不完整，也缺乏清楚脈絡。",
+      "這篇 paper 要解的是多跳問答中的資訊碎片化問題。傳統 RAG 雖然能找到語意相似的 chunks，但當答案需要跨多個片段整合時，系統常常只抓到局部相關內容，卻無法把這些事實串成完整回答。",
     problemGap:
-      "傳統 semantic RAG 的強項是找語意相似的內容，但多跳 QA 需要的不只是『像』，而是『這些內容之間真的有關聯，且能組成一條回答路徑』。",
+      "Semantic RAG 容易造成資訊同質化與孤島效應。它能找到像的 chunk，卻不知道這些 chunk 之間有沒有事實級別的連結，因此在多跳問題上常出現證據分散、上下文斷裂與答案不完整。",
     whyGraph:
-      "KG2RAG 用 knowledge graph 來引導 retrieval。它先找到 seed chunks，再沿著 graph 擴展出和問題相關的鄰近知識，最後再把這些知識重新組織成更適合回答的上下文。",
+      "KG2RAG 用 knowledge graph 當成 retrieval 的事實骨架。graph 的價值在於它讓 chunk 和 chunk 之間不再只是『很像』，而是有明確的實體關係、事實關係與資訊傳遞路徑。",
     contribution:
-      "這篇 paper 把 Graph 放進 RAG 的中間流程，讓 retrieval 不只是找資料，而是把資料組成可回答問題的 subgraph。",
+      "這篇 paper 的核心，不只是說『graph 讓結果變好』，而是清楚提出三個機制：離線圖譜關聯、BFS 圖引導擴展、MST 過濾與組織。這三步合起來，才是 KG2RAG 真正有效的原因。",
     method: [
-      "先做文件切分與 triplet extraction，建立 document-level knowledge graph。",
-      "查詢時先抓 seed chunks，再沿著 KG 擴展相關 entities 與 chunks。",
-      "最後對擴展後內容做 organization，生成較乾淨、較有脈絡的輸入給 LLM。",
+      "離線圖譜關聯：先從文本塊抽取三元組，建立 document-level knowledge graph，補上 chunk 之間的 fact-level relation。",
+      "BFS 圖引導擴展：從語義檢索命中的 seed chunks 出發，沿著圖向外擴展，把邏輯相連但未必高相似度的 supporting facts 一起找出來。",
+      "MST 過濾與組織：對擴展後的子圖做過濾與重組，只保留最具相關性的資訊傳遞路徑，降低噪音並節省 token。",
     ],
     whyWorks: [
-      "多跳 QA 需要的是可連起來的知識，而不是幾個孤立 chunk。",
-      "Graph expansion 讓系統找到與 seed 有關聯的關鍵補充資訊。",
-      "Organization 步驟則避免把所有擴展結果一股腦丟給 LLM，降低噪音。",
+      "離線圖譜關聯解決的是『chunk 彼此斷裂』。先建立圖，系統才知道文本之間有哪些真正的事實連結。",
+      "BFS 圖引導擴展解決的是『只命中 seed 還不夠』。多跳答案需要的不只是最像的段落，還需要鄰近的 supporting facts。",
+      "MST 過濾與組織解決的是『擴展後容易太吵』。它保留最重要的資訊路徑，讓回答更完整，同時避免 token 浪費。",
     ],
     results: [
-      "在 HotpotQA 上，KG2RAG 在 response quality 與 retrieval quality 都優於 baseline。",
-      "Ablation 顯示拿掉 organization 或 graph-guided expansion 都會明顯掉分。",
-      "在 MuSiQue 上也維持 response F1、EM 與 retrieval F1 的優勢。",
+      "在 HotpotQA 等多跳 QA benchmark 上，KG2RAG 在 response quality 與 retrieval quality 都優於常見 baseline。",
+      "論文結果支持三個核心機制的組合是必要的：只有擴展沒有組織，會引入太多噪音；只有 seed retrieval，則無法補齊隱含事實。",
+      "因此 KG2RAG 的提升不是單純因為『多抓到一些內容』，而是因為它把 retrieval 與 answer organization 都改寫成 graph-guided process。",
     ],
     visuals: [
       {
         src: "/paper-assets/kg2rag_paradigm_compare.png",
         alt: "KG2RAG paradigm comparison figure",
         caption:
-          "這張圖是在比較 LLM-only、Semantic RAG 與 Graph RAG。作者想強調的是：只靠語意檢索時，資料雖然相關，但不一定有足夠結構支撐多跳回答。",
+          "這張圖在比較不同 RAG paradigm。KG2RAG 的關鍵不是只抓相似 chunk，而是利用 graph 把原本分散的事實接起來。",
       },
       {
         src: "/paper-assets/kg2rag_workflow.png",
         alt: "KG2RAG workflow figure",
         caption:
-          "這張圖是 KG2RAG 的完整流程。可以把它理解成三步：先找 seed，再用 graph 擴展，最後把結果整理成適合回答問題的 context。",
+          "這張 workflow 就是 KG2RAG 的核心方法：離線圖譜關聯、BFS 圖引導擴展、MST 過濾與組織。",
       },
       {
         src: "/paper-assets/kg2rag_response_quality.png",
         alt: "KG2RAG response quality table",
         caption:
-          "這張表是核心結果。重點在於 KG2RAG 不只提升 retrieval quality，也讓最後答案的 F1、precision、recall 更好，表示 graph 對 answer composition 真的有幫助。",
+          "這張結果圖的重點是：KG2RAG 不只提升 retrieval quality，也讓最終回答的 quality 更好，表示 graph-guided organization 確實對 answer composition 有幫助。",
       },
     ],
     steps: [
       {
-        id: "seed",
-        title: "先找到 seed chunks",
-        summary: "先抓與問題最直接相關的內容。",
+        id: "offline-kg",
+        title: "Step 1. 離線圖譜關聯",
+        summary: "先從文本塊抽取三元組，建立 knowledge graph。",
         detail:
-          "第一步仍然會先做類似一般 RAG 的檢索，找到最接近問題的起始 chunks。這些 seed 是後續 graph expansion 的起點，但通常還不足以回答完整問題。",
-        takeaway: "KG2RAG 不是取代檢索，而是把檢索變成更有結構的起點。",
+          "KG2RAG 不是等到提問時才臨時拼湊資訊，而是在離線階段就先把文件拆成 chunks，再從 chunks 抽出實體與關係，形成 document-level knowledge graph。這一步把原本孤立的文本塊先接成可查詢的事實網路。",
+        takeaway: "如果沒有這一步，後面的 retrieval 仍然只會停在 chunk similarity，而不會真正進入 fact-level relation。",
       },
       {
-        id: "expand",
-        title: "沿著 graph 擴展相關知識",
-        summary: "從 seed 出發，找與它有關聯的 entity 與 chunk。",
+        id: "bfs-expand",
+        title: "Step 2. BFS 圖引導擴展",
+        summary: "從 seed chunks 出發，沿 graph 鄰域擴展 supporting facts。",
         detail:
-          "這一步是 KG2RAG 的核心。系統不是只停在最像的 chunk，而是順著 graph 關係去補充條件、因果、背景與關聯事實。",
-        takeaway: "多跳問題需要的是『有路徑的知識』，graph expansion 正是在找這條路徑。",
+          "系統先用一般語義檢索找到最相似的 seed chunks，但不會停在這裡。接著它會從 seed 節點出發，用 BFS 沿著圖向外擴展，把和問題邏輯相關、但語意相似度不一定高的 supporting facts 一起帶進來。",
+        takeaway: "這一步是 KG2RAG 最重要的地方，因為多跳 QA 真正缺的，往往不是 seed，而是 seed 周圍那些隱含事實。",
       },
       {
-        id: "organize",
-        title: "把擴展結果整理成 subgraph",
-        summary: "挑出有用內容，排除純噪音鄰居。",
+        id: "mst-organize",
+        title: "Step 3. MST 過濾與組織",
+        summary: "把擴展後的子圖過濾成最重要的資訊路徑。",
         detail:
-          "如果只是把所有 graph neighbors 都拿來，資訊會太雜。Organization 的作用，就是把真正能支撐答案的節點與 chunk 排出順序。",
-        takeaway: "Graph expansion 解決『找得到』，organization 解決『用得好』。",
+          "圖擴展之後，系統會拿到一個更大的子圖，但不是所有鄰居都值得送進 LLM。KG2RAG 會進一步用 MST 保留最具相關性的資訊傳遞路徑，把主幹與支撐資訊分清楚，並重新組織段落順序。",
+        takeaway: "BFS 解決的是『找不夠』，MST 解決的是『找太多』。兩者缺一不可。",
       },
       {
-        id: "answer",
-        title: "產生更完整的回答",
-        summary: "把整理後的 subgraph 交給 LLM 回答。",
+        id: "answer-compose",
+        title: "Step 4. 從圖回到答案",
+        summary: "把組織好的子圖轉成 evidence-backed answer。",
         detail:
-          "最後產生答案時，LLM 接收到的不再是一堆零散片段，而是一組比較有結構、彼此可支援的知識，因此更容易回答多跳問題。",
-        takeaway: "KG2RAG 的最終價值是讓 answer composition 變得更完整、更有證據脈絡。",
+          "最後送進 LLM 的不是一堆彼此孤立的段落，而是一個已經被 graph 串接、被 MST 過濾、被重組過的子圖。這讓最終回答更完整，也更容易帶著清楚的 evidence path。",
+        takeaway: "KG2RAG 的真正價值，不只是 retrieval 更好，而是讓最終答案本身更有結構、更像一條可追溯的知識路徑。",
       },
     ],
   },

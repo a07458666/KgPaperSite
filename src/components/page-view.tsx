@@ -1,10 +1,15 @@
 import { ComparisonVisuals } from "@/components/comparison-visuals";
 import { GraphPreview } from "@/components/graph-preview";
 import { HomePaperGallery } from "@/components/home-paper-gallery";
+import { PaperDemoView } from "@/components/paper-demo";
 import { PaperExplainerView } from "@/components/paper-explainer";
+import { PaperPager } from "@/components/paper-pager";
+import { PaperResultsTableView } from "@/components/paper-results-table";
 import { SectionRenderer } from "@/components/section-renderer";
 import { exampleGraphMap, type SitePage } from "@/data/graph-paper-site.mock";
+import { paperDemoMap } from "@/data/paper-demos";
 import { paperExplainerMap } from "@/data/paper-explainers";
+import { paperResultTableMap } from "@/data/paper-results";
 
 const chamberGraph = exampleGraphMap.kg_chamber_vacuum_001;
 
@@ -30,6 +35,8 @@ function getGraphBlock(pageId: string) {
 
 export function PageView({ page }: { page: SitePage }) {
   const explainer = paperExplainerMap[page.id];
+  const demo = paperDemoMap[page.id];
+  const resultTable = paperResultTableMap[page.id];
   const visibleSections = page.sections.filter((section) => {
     if (section.type === "card_grid" && section.items.length === 0) {
       return false;
@@ -57,8 +64,11 @@ export function PageView({ page }: { page: SitePage }) {
           <SectionRenderer key={heroSection.id} section={heroSection} />
         ) : null}
         {page.id === "page_home" ? <HomePaperGallery /> : null}
+        {page.type === "paper_detail" ? <PaperPager pageId={page.id} /> : null}
         {page.id === "page_comparison" ? <ComparisonVisuals /> : null}
         {explainer ? <PaperExplainerView explainer={explainer} /> : null}
+        {resultTable ? <PaperResultsTableView table={resultTable} /> : null}
+        {demo ? <PaperDemoView demo={demo} /> : null}
         {nonHeroSections.map((section) => (
           <SectionRenderer key={section.id} section={section} />
         ))}
